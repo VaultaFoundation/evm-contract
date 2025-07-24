@@ -31,7 +31,7 @@ if (WITH_SOFT_FORKS)
 endif()
 
 add_compile_definitions(ANTELOPE)
-add_compile_definitions(PROJECT_VERSION="1.1.0")
+add_compile_definitions(PROJECT_VERSION="1.2.0")
 
 # ethash
 list(APPEND SOURCES 
