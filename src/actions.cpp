@@ -436,6 +436,7 @@ void evm_contract::exec(const exec_input& input, const std::optional<exec_callba
 
     if(callback.has_value()) {
         const auto& cb = callback.value();
+        eosio::check(cb.contract != get_self() && cb.action != "onbridgemsg"_n, "forbidden callback route");
         action(std::vector<permission_level>{}, cb.contract, cb.action, output
         ).send();
     } else {
