@@ -248,4 +248,32 @@ BOOST_FIXTURE_TEST_CASE(wrong_input_params, exec_evm_tester) try {
 
 } FC_LOG_AND_RETHROW()
 
+BOOST_FIXTURE_TEST_CASE(forbidden_callback, exec_evm_tester) try {
+
+  // Create the account that will receive the callback
+  // and set the handling code that will store the callback data into a table
+  create_accounts({"receiver"_n});
+  set_code("receiver"_n, testing::contracts::evm_read_callback_wasm());
+  set_abi("receiver"_n, testing::contracts::evm_read_callback_abi().data());
+
+  // Fund evm1 address with 100 EOS
+  evm_eoa evm1;
+  const int64_t to_bridge = 1000000;
+  transfer_token("alice"_n, "evm"_n, make_asset(to_bridge), evm1.address_0x());
+
+  // Deploy contract
+  auto token_addr = deploy_evm_token_contract(evm1);
+
+  // Transfer 4321 YUN
+  evm_eoa evm2;
+  erc20_transfer(token_addr, evm1, evm2, 4321);
+
+  BOOST_REQUIRE_EXCEPTION(erc20_balance(token_addr, evm2, exec_callback{evm_account_name, "pushtx"_n}),
+                          eosio_assert_message_exception, eosio_assert_message_is("forbidden callback route"));
+
+  BOOST_REQUIRE_EXCEPTION(erc20_balance(token_addr, evm2, exec_callback{"receiver"_n, "onbridgemsg"_n}),
+                          eosio_assert_message_exception, eosio_assert_message_is("forbidden callback route"));
+
+} FC_LOG_AND_RETHROW()
+
 BOOST_AUTO_TEST_SUITE_END()
