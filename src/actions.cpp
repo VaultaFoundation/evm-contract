@@ -423,8 +423,9 @@ Receipt evm_contract::execute_tx(const runtime_config& rc, eosio::name miner, Bl
         // Bridge transfers can generate such txs.
         uint64_t tx_gas_used = receipt.cumulative_gas_used; // Only transaction in the "block" so cumulative_gas_used is the tx gas_used.
         auto s = get_statistics();
-        if (_config->get_evm_version() >= 1) {
-            intx::uint512 gas_fee = intx::uint256(tx_gas_used) * ep.evm().block().header.base_fee_per_gas.value();
+        auto current_ver = _config->get_evm_version();
+        if ( current_ver >= 1) {
+            intx::uint512 gas_fee = current_ver == 3 ? res.overhead_fee+res.storage_fee : intx::uint256(tx_gas_used) * ep.evm().block().header.base_fee_per_gas.value();
             check(gas_fee < std::numeric_limits<intx::uint256>::max(), "too much gas");
             s.gas_fee_income += static_cast<intx::uint256>(gas_fee);
         } else {
