@@ -1042,4 +1042,40 @@ BOOST_FIXTURE_TEST_CASE(call_other_payer_function, call_evm_tester) try {
   BOOST_REQUIRE(*evm_balance(token_addr) == 60_ether);
 } FC_LOG_AND_RETHROW()
 
+BOOST_FIXTURE_TEST_CASE(gas_fee_equals_max_gas_cost, call_evm_tester) try {
+    setversion(1, evm_account_name);
+    produce_blocks(3);
+
+    evm_eoa evm1;
+    transfer_token("alice"_n, evm_account_name, make_asset(1000000), evm1.address_0x());
+
+    open("bob"_n);
+    transfer_token("bob"_n, evm_account_name, make_asset(1000), "bob");
+
+    open("alice"_n);
+    transfer_token("bob"_n, evm_account_name, make_asset(1000000), "alice");
+
+    auto token_addr = deploy_test_contract(evm1);
+
+    uint64_t gas_limit = 21206;
+
+    silkworm::Bytes data;
+    data += evmc::from_hex("a1a7d817").value();   // sha3(testpay())[:4]
+
+    evmc::bytes to{std::begin(token_addr.bytes), std::end(token_addr.bytes)};
+    evmc::bytes32 v{};
+    intx::be::store(v.bytes, intx::uint256(0));
+
+    auto alice_balance = intx::uint256(vault_balance("alice"_n));
+    auto bob_balance = intx::uint256(vault_balance("bob"_n));
+
+    BOOST_REQUIRE_NO_THROW(callotherpay("bob"_n, "alice"_n, to, silkworm::Bytes(v), data, gas_limit, "alice"_n));
+
+    BOOST_REQUIRE(intx::uint256(vault_balance("alice"_n)) == alice_balance);
+    auto new_bob_balance = intx::uint256(vault_balance("bob"_n));
+
+    // Check that the tx used the amount we set in gas_limit => 21206
+    BOOST_REQUIRE(bob_balance-new_bob_balance == intx::uint256(gas_limit*suggested_gas_price));
+} FC_LOG_AND_RETHROW()
+
 BOOST_AUTO_TEST_SUITE_END()
