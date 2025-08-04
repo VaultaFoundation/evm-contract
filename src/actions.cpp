@@ -403,7 +403,7 @@ Receipt evm_contract::execute_tx(const runtime_config& rc, eosio::name miner, Bl
         auto base_fee = ep.evm().block().header.base_fee_per_gas.value();
         const intx::uint512 max_gas_cost = intx::uint256(tx.gas_limit) * tx.max_fee_per_gas;
         const intx::uint512 gas_fee = intx::uint256(tx_gas_used) * (tx.priority_fee_per_gas(base_fee) + base_fee);
-        check(gas_fee < std::numeric_limits<intx::uint256>::max() && max_gas_cost < std::numeric_limits<intx::uint256>::max() && max_gas_cost > gas_fee, "invalid gas fee");
+        check(gas_fee < std::numeric_limits<intx::uint256>::max() && max_gas_cost < std::numeric_limits<intx::uint256>::max() && max_gas_cost >= gas_fee, "invalid gas fee");
         const intx::uint256 refund = static_cast<intx::uint256>(max_gas_cost - gas_fee);
 
         const name ingress_account(*extract_reserved_address(*tx.from));
