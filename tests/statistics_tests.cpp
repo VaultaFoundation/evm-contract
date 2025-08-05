@@ -158,7 +158,6 @@ try {
 
    // Set version 1
    setversion(1, evm_account_name);
-
    produce_blocks(3);
 
    // Fund evm1 address with 10.0000 EOS / trigger version change and sets miner_cut to 0
@@ -209,6 +208,31 @@ try {
    // 0.0063 + 0.0063 = 0.0126
    const auto s2 = get_statistics();
    BOOST_REQUIRE(s2.gas_fee_income == (balance_and_dust{make_asset(126), 0ULL}));
+
+   // Set version 3
+   setgasprices({.overhead_price=80*silkworm::kGiga, .storage_price=80*silkworm::kGiga});
+   setversion(3, evm_account_name);
+   produce_blocks(3);
+
+   // Fund evm1 address with 10.0000 EOS / trigger version change
+   transfer_token("alice"_n, evm_account_name, make_asset(10'0000), evm1.address_0x());
+
+   tx = generate_tx(evm2.address, 1);
+   tx.type = silkworm::TransactionType::kDynamicFee;
+   tx.max_priority_fee_per_gas = 0;
+   tx.max_fee_per_gas = base_gas_price + inclusion_price;
+
+   evm1.sign(tx);
+   pushtx(tx, miner_account);
+
+   //0.00105 + 0
+   BOOST_REQUIRE(vault_balance(miner_account) == (balance_and_dust{make_asset(10), 50'000'000'000'000ULL}));
+
+   // Gas fee statistics
+   // 0.0126 + 0.00168 = 0.01428
+   const auto s3 = get_statistics();
+
+   BOOST_REQUIRE(s3.gas_fee_income == (balance_and_dust{make_asset(142), 80'000'000'000'000ULL}));
 }
 FC_LOG_AND_RETHROW()
 
