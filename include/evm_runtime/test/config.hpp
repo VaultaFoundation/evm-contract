@@ -6,7 +6,7 @@ namespace test {
 
 inline constexpr ChainConfig kTestNetwork{
     .chain_id = 1,
-    .protocol_rule_set = protocol::RuleSetType::kNoProof,
+    .rule_set_config = protocol::EthashConfig{.validate_seal = false},
     ._homestead_block = 0,
     ._dao_block = 0,
     ._tangerine_whistle_block = 0,

@@ -6,8 +6,11 @@
 #include <evm_runtime/test/config.hpp>
 #include <evm_runtime/runtime_config.hpp>
 #include <evm_runtime/transaction.hpp>
+#include <silkworm/db/state/account_codec.hpp>
+
 namespace evm_runtime {
 using namespace silkworm;
+using namespace silkworm::db::state;
 
 [[eosio::action]] void evm_contract::testtx( const std::optional<bytes>& orlptx, const evm_runtime::test::block_info& bi ) {
     assert_unfrozen();
@@ -19,7 +22,7 @@ using namespace silkworm;
 
     evm_runtime::test::engine engine{evm_runtime::test::kTestNetwork};
     evm_runtime::state state{get_self(), get_self()};
-    silkworm::ExecutionProcessor ep{block, engine, state, evm_runtime::test::kTestNetwork, {}};
+    silkworm::ExecutionProcessor ep{block, engine, state, evm_runtime::test::kTestNetwork, true, {}, {}};
 
     if(orlptx) {
         Transaction tx;
@@ -34,7 +37,7 @@ using namespace silkworm;
         };
         execute_tx(rc, eosio::name{}, block, transaction{std::move(tx)}, ep, {});
     }
-    engine.finalize(ep.state(), ep.evm().block());
+    engine.finalize(ep.state(), ep.evm().block(), ep.evm(), {});
     ep.state().write_to_db(ep.evm().block().header.number);
 }
 
@@ -199,9 +202,8 @@ using namespace silkworm;
     auto maybe_account = [](const bytes& data) -> std::optional<Account> {
         std::optional<Account> res{};
         if(data.size()) {
-            Account tmp;
             ByteView bv{(const uint8_t *)data.data(), data.size()};
-            auto dec_res = Account::from_encoded_storage(bv);
+            auto dec_res = AccountCodec::from_encoded_storage(bv);
             eosio::check(!!dec_res, "unable to decode account");
             res = *dec_res;
         }

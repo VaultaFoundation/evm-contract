@@ -2,44 +2,27 @@
 #include <silkworm/core/protocol/rule_set.hpp>
 #include <silkworm/core/protocol/param.hpp>
 
+using namespace silkworm::protocol;
+
 namespace evm_runtime {
 namespace test {
 
-class engine : public  silkworm::protocol::IRuleSet {
+class engine : public RuleSet {
   public:
-    ChainConfig config;
-    explicit engine(const ChainConfig& chain_config){
-        config = chain_config;
+    explicit engine(const ChainConfig& chain_config) : RuleSet(chain_config, /*prohibit_ommers=*/false) {}
+
+    void initialize(EVM& evm) override {}
+    ValidationResult validate_difficulty_and_seal(const BlockHeader&, const BlockHeader&) override {
+        return ValidationResult::kOk;
     }
 
-    ValidationResult validate_seal(const BlockHeader& header) override {
-        (void)header;
+    ValidationResult finalize(IntraBlockState& state, const Block& block, EVM& evm, const std::vector<Log>& logs) override {
+        // const BlockReward reward{compute_reward(block)};
+        // state.add_to_balance(get_beneficiary(block.header), reward.miner);
+        // for (size_t i{0}; i < block.ommers.size(); ++i) {
+        //     state.add_to_balance(block.ommers[i].beneficiary, reward.ommers[i]);
+        // }
         return ValidationResult::kOk;
-    };
-
-    void finalize(IntraBlockState& state, const Block& block) override {
-        intx::uint256 block_reward;
-        const evmc_revision revision{config.revision(block.header)};
-        if (revision >= EVMC_CONSTANTINOPLE) {
-            block_reward = silkworm::protocol::kBlockRewardConstantinople;
-        } else if (revision >= EVMC_BYZANTIUM) {
-            block_reward = silkworm::protocol::kBlockRewardByzantium;
-        } else {
-            block_reward = silkworm::protocol::kBlockRewardFrontier;
-        }
-
-        const uint64_t block_number{block.header.number};
-        intx::uint256 miner_reward{block_reward};
-        for (const BlockHeader& ommer : block.ommers) {
-            intx::uint256 ommer_reward{((8 + ommer.number - block_number) * block_reward) >> 3};
-            state.add_to_balance(ommer.beneficiary, ommer_reward);
-            miner_reward += block_reward / 32;
-
-        }
-        if(revision < EVMC_PARIS) {
-            eosio::print("add balance to beneficiary\n");
-            state.add_to_balance(block.header.beneficiary, miner_reward);
-        }
     }
 
     //! \brief Performs validation of block body that can be done prior to sender recovery and execution.

@@ -15,6 +15,7 @@ list(APPEND SOURCES
 if (WITH_TEST_ACTIONS)
     add_compile_definitions(WITH_TEST_ACTIONS)
     list(APPEND SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/test_actions.cpp)
+    list(APPEND SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../silkworm/silkworm/db/state/account_codec.cpp)
 endif()
 
 if (WITH_LOGTIME)
