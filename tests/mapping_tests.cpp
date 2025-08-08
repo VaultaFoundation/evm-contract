@@ -242,7 +242,7 @@ try {
 
    // Now actually commit the init action into a block to do further testing on top of that state in later blocks.
    {
-      this->_start_block(control->head_block_time() + fc::milliseconds(500));
+      this->_start_block(head_block_time() + fc::milliseconds(500));
       BOOST_REQUIRE_EQUAL(control->pending_block_time().sec_since_epoch(), bm.genesis_timestamp);
 
       init();
@@ -255,12 +255,12 @@ try {
       fund_evm_faucet();
 
       produce_block();
-      BOOST_REQUIRE_EQUAL(control->head_block_num(), init_block_num);
+      BOOST_REQUIRE_EQUAL(head_block_num(), init_block_num);
 
       ilog("Timestamp of block containing init action: ${time} (${time_sec})",
-           ("time", control->head_block_time())("time_sec", control->head_block_time().sec_since_epoch()));
+           ("time", head_block_time())("time_sec", head_block_time().sec_since_epoch()));
 
-      BOOST_REQUIRE_EQUAL(control->head_block_time().sec_since_epoch(), bm.genesis_timestamp);
+      BOOST_REQUIRE_EQUAL(head_block_time().sec_since_epoch(), bm.genesis_timestamp);
 
       // Produce one more block so the next block with closest allowed timestamp has a timestamp exactly one second
       // after the timestamp of the block containing the init action. This is not necessary and the furhter tests

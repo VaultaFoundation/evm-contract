@@ -449,8 +449,17 @@ basic_evm_tester::generate_tx(const evmc::address& to, const intx::uint256& valu
    };
 }
 transaction_trace_ptr basic_evm_tester::exec(const exec_input& input, const std::optional<exec_callback>& callback) {
-   auto binary_data = fc::raw::pack<exec_input, std::optional<exec_callback>>(input, callback);
-   return basic_evm_tester::push_action(evm_account_name, "exec"_n, evm_account_name, bytes{binary_data.begin(), binary_data.end()});
+   fc::datastream<size_t> ps;
+   fc::raw::pack(ps, input);
+   fc::raw::pack(ps, callback);
+   std::vector<char> vec(ps.tellp());
+
+   if( vec.size() ) {
+     fc::datastream<char*>  ds( vec.data(), size_t(vec.size()) );
+     fc::raw::pack(ds,input);
+     fc::raw::pack(ds,callback);
+   }
+   return basic_evm_tester::push_action(evm_account_name, "exec"_n, evm_account_name, vec);
 }
 
 transaction_trace_ptr basic_evm_tester::call(name from, const evmc::bytes& to, const evmc::bytes& value, evmc::bytes& data, uint64_t gas_limit, name actor)

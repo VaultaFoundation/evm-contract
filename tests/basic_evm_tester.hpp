@@ -393,6 +393,14 @@ public:
       return _finish_block();
    }
 
+   uint32_t head_block_num() const {
+      return control->head().block_num();
+   }
+
+   time_point head_block_time() const {
+      return control->head().block_time();
+   }
+
    bool validate() {
       const block_header &hbh = control->head().header();
       const block_header &vn_hbh = validating_node->head().header();
@@ -624,7 +632,7 @@ public:
    // object.
    explicit speculative_block_starter(Tester& tester, uint32_t time_gap_sec = 0) : t(tester)
    {
-      t.start_block(t.control->head_block_time() + fc::milliseconds(500 + 1000 * time_gap_sec));
+      t.start_block(t.head_block_time() + fc::milliseconds(500 + 1000 * time_gap_sec));
    }
 
    speculative_block_starter(speculative_block_starter&& other) : t(other.t) { other.canceled = true; }

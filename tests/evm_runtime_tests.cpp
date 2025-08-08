@@ -471,7 +471,9 @@ struct evm_runtime_tester : eosio_system_tester, silkworm::State {
       const auto& accnt = control->db().get<account_object,by_name>(ME);
       abi_def abi;
       BOOST_REQUIRE_EQUAL(abi_serializer::to_abi(accnt.abi, abi), true);
-      evm_runtime_abi.set_abi(abi, abi_serializer_max_time);
+
+      abi_serializer::yield_function_t yield_fn{};
+      evm_runtime_abi.set_abi(abi, yield_fn);
 
       base_tester::push_action(ME,
                                "init"_n,
