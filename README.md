@@ -6,16 +6,19 @@ The Vaulta EVM consists of multiple components that are tracked across different
 
 The repositories containing code relevant to the Vaulta EVM project include:
 1. https://github.com/VaultaFoundation/evm-node: Vaulta EVM Node and RPC.
-2. https://github.com/VaultaFoundation/blockscout: A fork of the [blockscout](https://github.com/VaultaFoundation/blockscout) blockchain explorer with adaptations to make it suitable for the Vaulta EVM project.
-3. https://github.com/VaultaFoundation/evm-bridge-frontend: Frontend to operate the EVM trustless bridge.
-4. This repository.
+2. https://github.com/VaultaFoundation/evm-miner: Vaulta EVM miner.
+3. https://github.com/VaultaFoundation/blockscout: A fork of the [blockscout](https://github.com/VaultaFoundation/blockscout) blockchain explorer with adaptations to make it suitable for the Vaulta EVM project.
+4. https://github.com/VaultaFoundation/evm-bridge-contracts: Trustless bridge contract that bridges ERC-20 tokens in EVM side with tokens deployed in Vaulta native side.
+5. https://github.com/VaultaFoundation/evm-bridge-frontend: Frontend to operate the EVM trustless bridge.
+6. This repository.
 
 This repository in particular hosts the source to build the Vaulta EVM Contract:
 1. Vaulta EVM Contract: This is the Antelope smart contract that implements the main runtime for the EVM. The source code for the smart contract can be found in the `contracts` directory. The main build artifacts are `evm_runtime.wasm` and `evm_runtime.abi`.
 
 Beyond code, there are additional useful resources relevant to the Vaulta EVM project.
-1. https://github.com/eosnetworkfoundation/evm-public-docs: A repository to hold technical documentation for an audience interested in following and participating in the operations of the Vaulta EVM project. The genesis JSON needed to stand up a Vaulta EVM Node that works with the EVM on the Vaulta blockchain can also be found in that repository.
-2. https://docs.eosnetwork.com/docs/latest/eos-evm/: Official documentation for the Vaulta EVM.
+1. https://github.com/VaultaFoundation/evm-public-docs/tree/main/deployments_plan_for_CEX: A detailed evm-node deployment guideline of Vaulta EVM for service providers and centralized exchanges.
+2. https://github.com/VaultaFoundation/evm-public-docs: A repository to hold technical documentation for an audience interested in following and participating in the operations of the Vaulta EVM project. The genesis JSON needed to stand up a Vaulta EVM Node that works with the EVM on the Vaulta blockchain can also be found in that repository.
+3. https://docs.eosnetwork.com/docs/latest/eos-evm/: Official documentation for the Vaulta EVM.
 
 ## Compilation
 
@@ -100,3 +103,4 @@ This repo contains the following GitHub Actions workflows for CI:
     - [Documentation](./.github/workflows/node.md)
 
 See the pipeline documentation for more information.
+
