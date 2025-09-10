@@ -359,7 +359,7 @@ For jungle public testnet, you can use https://monitor4.jungletestnet.io/ to cre
 - Choose an EVM account name. We use `evmevmevmevm` in this document as example.
 - Run the following transaction to create account in console:
 ```sh
-./cleos create account CREATOR_ACCOUNT evmevmevmevm TEMP_PUBLIC_KEY TEMP_PUBLIC_KEY
+cleos create account CREATOR_ACCOUNT evmevmevmevm TEMP_PUBLIC_KEY TEMP_PUBLIC_KEY
 ```
 
 
@@ -368,24 +368,25 @@ For jungle public testnet, you can use https://monitor4.jungletestnet.io/ to cre
 After building the evm contract binaries, run the following `cleos` commands to deploy the contract:
 
 ```sh
-./cleos set code evmevmevmevm EVM_PATH_to_evm_runtime.wasm
-./cleos set abi evmevmevmevm EVM_PATH_to_evm_runtime.abi
+cleos set code evmevmevmevm EVM_PATH_to_evm_runtime.wasm
+cleos set abi evmevmevmevm EVM_PATH_to_evm_runtime.abi
 ```
 
 ### 2a. Initialize EVM contract
 The EVM contract will not allow any actions except `init` until its chain id & native token is configured. Exact values to use here are TBD.
 ```
-./cleos push action evmevmevmevm init "{\"chainid\":$EVM_CHAINID,\"fee_params\":{\"gas_price\":150000000000,\"miner_cut\":10000,\"ingress_bridge_fee\":\"0.0100 A\"}}" -x 60 -p evmevmevmevm
+cleos push action evmevmevmevm init "{\"chainid\":$EVM_CHAINID,\"fee_params\":{\"gas_price\":150000000000,\"miner_cut\":10000,\"ingress_bridge_fee\":\"0.0100 A\"},\"token_contract\":\"core.vaulta\"}" -x 60 -p evmevmevmevm
 ```
+in the above case, minimum gas_price is set to 150 gwei, miner_cut is set to 10% of the gas fee, and gas token is set to `core.vaulta::A` token. However, any other token deployed in Vaulta native can also be used as Vaulta EVM gas token during initialization.
 
 add eosio.code to active permission
 ```
-./cleos set account permission evmevmevmevm active --add-code
+cleos set account permission evmevmevmevm active --add-code
 ```
 
-transfer initial balance
+transfer initial balance from Vaulta Native world to Vaulta EVM world
 ```
-./cleos transfer testaccount evmevmevmevm "1.0000 A" "evmevmevmevm"
+cleos transfer testaccount evmevmevmevm "1.0000 A" "evmevmevmevm" -c core.vaulta
 ```
 
 ## For EVM Service Providers
@@ -399,7 +400,7 @@ Run at least one Antelope node to sync with the public testnet, running in irrev
 
 Example command:
 ```sh
-./build/programs/nodeos/nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts
+nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts
 ```
 
 ### 2. Run evm-node
@@ -409,7 +410,7 @@ Run at least one evm-node, a.k.a. silkworm node, to sync with the Antelope node.
 Refer to the *Start up evm-node (silkworm node)* section in the [Enable EVM For Local Testnet](https://github.com/VaultaFoundation/evm-contract/blob/main/docs/local_testnet_deployment_plan.md) guide for more details.
 
 ```sh
-./build/cmd/evm-node --chain-data ./chain-data  --plugin block_conversion_plugin --plugin blockchain_plugin --nocolor 1 --verbosity=5
+evm-node --chain-data ./chain-data  --plugin block_conversion_plugin --plugin blockchain_plugin --nocolor 1 --verbosity=5
 ```
 
 ### 3. Run evm-rpc
@@ -418,18 +419,18 @@ Run at least one evm-rpc, a.k.a. silkworm rpc, process to sync with the evm-node
 The evm-rpc must be deployed on the same machine with evm-node, as it needs to access the same chain-data folder.
 
 ```sh
-./build/cmd/evm-rpc --evm-node=127.0.0.1:8080 --chaindata=./chain-data 
+evm-rpc --evm-node=127.0.0.1:8080 --chaindata=./chain-data 
 ```
 
 Refer to the *Start up evm-rpc (silkworm RPC)* section in the [Enable EVM For Local Testnet](https://github.com/VaultaFoundation/evm-contract/blob/main/docs/local_testnet_deployment_plan.md) guide for more RPC setup details.
 
 ### 4. Ensure Enough Resources
 
-You must have at least one Antelope account, the sender account, with enough CPU/NET/RAM resources. The service providers can create one or more testnet accounts with some CPU, NET, and RAM resources. We use account a123 as example:
+You must have at least one Antelope account, the sender account, with enough CPU/NET/RAM resources. The service providers can create one or more testnet accounts with some CPU, NET, and RAM resources. We use account `a123` as example:
 
 open sender account balance 
 ```
-./cleos push action evmevmevmevm open '{"owner":"a123"}' -p a123
+cleos push action evmevmevmevm open '{"owner":"a123"}' -p a123
 ```
 
 ### 5. Run a Transaction Wrapper(miner) Service
@@ -449,7 +450,7 @@ EOS_KEY="5JURSKS1BrJ1TagNBw1uVSzTQL2m9eHGkjknWeZkjSt33Awtior"
 HOST="127.0.0.1"
 PORT="18888"
 MINER_PERMISSION="active"
-EVM_ACCOUNT="evmevmevm"
+EVM_ACCOUNT="evmevmevmevm"
 MINER_ACCOUNT="a123"
 ```
 
