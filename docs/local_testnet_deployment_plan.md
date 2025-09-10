@@ -178,7 +178,7 @@ plugin = eosio::net_api_plugin
 Start the Antelope node with the below command:
 
 ```shell
-./build/programs/nodeos/nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console
+nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console
 ```
 
 You will see the node is started and blocks are produced, for example:
@@ -191,21 +191,21 @@ info  2022-10-14T04:03:20.401 nodeos    producer_plugin.cpp:2437      produce_bl
 If you want to start and discard all previous blockchain data, add `--delete-all-blocks`:
 
 ```shell
-./build/programs/nodeos/nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console --delete-all-blocks
+nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console --delete-all-blocks
 ```
 
 If you want to start with the previous blockchain data, but encounter the "dirty flag" error, try to restart with `--hard-replay`, in this case the state will be discarded, the node will validate and apply every block from the beginning.
 
 ```shell
-./build/programs/nodeos/nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console --hard-replay
+nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console --hard-replay
 ```
 
 ### 2. Blockchain Bootstrap And Initialization
 
-You will use `cleos` command line tool from here onward, you can find the command line interface [here](https://docs.eosnetwork.com/spring/3.2-rc1/cleos/command-reference/) or you can run `./build/programs/cleos/cleos` so try the following command now:
+You will use `cleos` command line tool from here onward, you can find the command line interface [here](https://docs.eosnetwork.com/spring/3.2-rc1/cleos/command-reference/) or you can run `cleos` so try the following command now:
 
 ```shell
-./cleos get info
+cleos get info
 ```
 
 If you can get the similar response as below:
@@ -304,7 +304,7 @@ warning: transaction executed locally, but may not be confirmed by the network y
 Run below commmand to set boot.abi:
 
 ```shell
-./cleos set abi eosio ../system-contracts/build/contracts/eosio.boot/eosio.boot.abi
+cleos set abi eosio ../system-contracts/build/contracts/eosio.boot/eosio.boot.abi
 ```
 
 Output:
@@ -319,64 +319,64 @@ warning: transaction executed locally, but may not be confirmed by the network y
 Activate the other protocol features:
 
 ```shell
-./cleos push action eosio activate '["f0af56d2c5a48d60a4a5b5c903edfb7db3a736a94ed589d0b797df33ff9d3e1d"]' -p eosio 
-./cleos push action eosio activate '["e0fb64b1085cc5538970158d05a009c24e276fb94e1a0bf6a528b48fbc4ff526"]' -p eosio
-./cleos push action eosio activate '["d528b9f6e9693f45ed277af93474fd473ce7d831dae2180cca35d907bd10cb40"]' -p eosio
-./cleos push action eosio activate '["c3a6138c5061cf291310887c0b5c71fcaffeab90d5deb50d3b9e687cead45071"]' -p eosio 
-./cleos push action eosio activate '["bcd2a26394b36614fd4894241d3c451ab0f6fd110958c3423073621a70826e99"]' -p eosio
-./cleos push action eosio activate '["ad9e3d8f650687709fd68f4b90b41f7d825a365b02c23a636cef88ac2ac00c43"]' -p eosio
-./cleos push action eosio activate '["8ba52fe7a3956c5cd3a656a3174b931d3bb2abb45578befc59f283ecd816a405"]' -p eosio 
-./cleos push action eosio activate '["6bcb40a24e49c26d0a60513b6aeb8551d264e4717f306b81a37a5afb3b47cedc"]' -p eosio
-./cleos push action eosio activate '["68dcaa34c0517d19666e6b33add67351d8c5f69e999ca1e37931bc410a297428"]' -p eosio
-./cleos push action eosio activate '["5443fcf88330c586bc0e5f3dee10e7f63c76c00249c87fe4fbf7f38c082006b4"]' -p eosio
-./cleos push action eosio activate '["4fca8bd82bbd181e714e283f83e1b45d95ca5af40fb89ad3977b653c448f78c2"]' -p eosio
-./cleos push action eosio activate '["ef43112c6543b88db2283a2e077278c315ae2c84719a8b25f25cc88565fbea99"]' -p eosio
-./cleos push action eosio activate '["4a90c00d55454dc5b059055ca213579c6ea856967712a56017487886a4d4cc0f"]' -p eosio 
-./cleos push action eosio activate '["35c2186cc36f7bb4aeaf4487b36e57039ccf45a9136aa856a5d569ecca55ef2b"]' -p eosio
-./cleos push action eosio activate '["299dcb6af692324b899b39f16d5a530a33062804e41f09dc97e9f156b4476707"]' -p eosio
-./cleos push action eosio activate '["2652f5f96006294109b3dd0bbde63693f55324af452b799ee137a81a905eed25"]' -p eosio
-./cleos push action eosio activate '["1a99a59d87e06e09ec5b028a9cbb7749b4a5ad8819004365d02dc4379a8b7241"]' -p eosio
+cleos push action eosio activate '["f0af56d2c5a48d60a4a5b5c903edfb7db3a736a94ed589d0b797df33ff9d3e1d"]' -p eosio 
+cleos push action eosio activate '["e0fb64b1085cc5538970158d05a009c24e276fb94e1a0bf6a528b48fbc4ff526"]' -p eosio
+cleos push action eosio activate '["d528b9f6e9693f45ed277af93474fd473ce7d831dae2180cca35d907bd10cb40"]' -p eosio
+cleos push action eosio activate '["c3a6138c5061cf291310887c0b5c71fcaffeab90d5deb50d3b9e687cead45071"]' -p eosio 
+cleos push action eosio activate '["bcd2a26394b36614fd4894241d3c451ab0f6fd110958c3423073621a70826e99"]' -p eosio
+cleos push action eosio activate '["ad9e3d8f650687709fd68f4b90b41f7d825a365b02c23a636cef88ac2ac00c43"]' -p eosio
+cleos push action eosio activate '["8ba52fe7a3956c5cd3a656a3174b931d3bb2abb45578befc59f283ecd816a405"]' -p eosio 
+cleos push action eosio activate '["6bcb40a24e49c26d0a60513b6aeb8551d264e4717f306b81a37a5afb3b47cedc"]' -p eosio
+cleos push action eosio activate '["68dcaa34c0517d19666e6b33add67351d8c5f69e999ca1e37931bc410a297428"]' -p eosio
+cleos push action eosio activate '["5443fcf88330c586bc0e5f3dee10e7f63c76c00249c87fe4fbf7f38c082006b4"]' -p eosio
+cleos push action eosio activate '["4fca8bd82bbd181e714e283f83e1b45d95ca5af40fb89ad3977b653c448f78c2"]' -p eosio
+cleos push action eosio activate '["ef43112c6543b88db2283a2e077278c315ae2c84719a8b25f25cc88565fbea99"]' -p eosio
+cleos push action eosio activate '["4a90c00d55454dc5b059055ca213579c6ea856967712a56017487886a4d4cc0f"]' -p eosio 
+cleos push action eosio activate '["35c2186cc36f7bb4aeaf4487b36e57039ccf45a9136aa856a5d569ecca55ef2b"]' -p eosio
+cleos push action eosio activate '["299dcb6af692324b899b39f16d5a530a33062804e41f09dc97e9f156b4476707"]' -p eosio
+cleos push action eosio activate '["2652f5f96006294109b3dd0bbde63693f55324af452b799ee137a81a905eed25"]' -p eosio
+cleos push action eosio activate '["1a99a59d87e06e09ec5b028a9cbb7749b4a5ad8819004365d02dc4379a8b7241"]' -p eosio
 ```
 
 #### create system accounts:
 ```shell
-./cleos create account eosio exchange EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.msig EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.token EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.bpay EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.names EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.ram EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.ramfee EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.saving EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.stake EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.upay EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.rex EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.fees EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.grants EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio exchange EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.msig EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.token EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.bpay EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.names EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.ram EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.ramfee EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.saving EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.stake EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.upay EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.rex EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.fees EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.grants EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
 ```
 
 #### create other test accounts
 ```shell
-./cleos create account eosio a123 EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio a123 EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
 ```
 
 #### deploy token contract
 ```shell
 echo "=== set contract to eosio.token ==="
-./cleos set code eosio.token ./eosio.token.wasm
-./cleos set abi eosio.token ./eosio.token.abi
+cleos set code eosio.token ./eosio.token.wasm
+cleos set abi eosio.token ./eosio.token.abi
 ```
 
 #### create, issue & transfer tokens
 ```shell
-./cleos push action eosio.token create '{"issuer":"eosio", "maximum_supply":"1000000000.0000 SYS", "can_freeze":0, "can_recall":0, "can_whitelist":0}' -p eosio.token@active
-./cleos push action eosio.token create '{"issuer":"eosio", "maximum_supply":"1000000000.0000 A", "can_freeze":0, "can_recall":0, "can_whitelist":0}' -p eosio.token@active
+cleos push action eosio.token create '{"issuer":"eosio", "maximum_supply":"1000000000.0000 SYS", "can_freeze":0, "can_recall":0, "can_whitelist":0}' -p eosio.token@active
+cleos push action eosio.token create '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0}' -p eosio.token@active
 
-./cleos push action eosio.token issue '{"to":"eosio", "quantity":"1000000000.0000 SYS", "memo":"hi"}' -p eosio@active
-./cleos push action eosio.token issue '{"to":"eosio", "quantity":"1000000000.0000 A", "memo":"hi"}' -p eosio@active
+cleos push action eosio.token issue '{"to":"eosio", "quantity":"1000000000.0000 SYS", "memo":"hi"}' -p eosio@active
+cleos push action eosio.token issue '{"to":"eosio", "quantity":"1000000000.0000 EOS", "memo":"hi"}' -p eosio@active
 
-./cleos push action eosio.token transfer '{"from":"eosio", "to":"a123", "quantity":"5000000.0000 SYS", "memo":""}' -p eosio@active
-./cleos push action eosio.token transfer '{"from":"eosio", "to":"a123", "quantity":"5000000.0000 A", "memo":""}' -p eosio@active
+cleos push action eosio.token transfer '{"from":"eosio", "to":"a123", "quantity":"5000000.0000 SYS", "memo":""}' -p eosio@active
+cleos push action eosio.token transfer '{"from":"eosio", "to":"a123", "quantity":"5000000.0000 EOS", "memo":""}' -p eosio@active
 ```
 
 
@@ -385,30 +385,30 @@ echo "=== set contract to eosio.token ==="
 Create account evmevmevmevm with key pair EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP 5JURSKS1BrJ1TagNBw1uVSzTQL2m9eHGkjknWeZkjSt33Awtior:
 
 ```shell
-./cleos create account eosio evmevmevmevm EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio evmevmevmevm EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
 ```
 
 Deploy evm_runtime contract, wasm and abi file, to account evmevmevmevm:
 
 ```shell
-./cleos set code evmevmevmevm ./evm_runtime.wasm
-./cleos set abi evmevmevmevm ./evm_runtime.abi
+cleos set code evmevmevmevm ./evm_runtime.wasm
+cleos set abi evmevmevmevm ./evm_runtime.abi
 ```
 
-Set chain ID & native token configuration (in this example, gas price is 150 Gwei, miner_cut is 10%)
+Set chain ID & native token configuration (in this example, gas price is 150 Gwei, miner_cut is 10%, gas token is `eosio.token::EOS`)
 ```
-./cleos push action evmevmevmevm init "{\"chainid\":15555,\"fee_params\":{\"gas_price\":150000000000,\"miner_cut\":10000,\"ingress_bridge_fee\":\"0.0100 A
+cleos push action evmevmevmevm init "{\"chainid\":15555,\"fee_params\":{\"gas_price\":150000000000,\"miner_cut\":10000,\"ingress_bridge_fee\":\"0.0100 EOS
 \"},\"token_contract\":\"eosio.token\"}" -p evmevmevmevm
 ```
 
 Add eosio.code to active permission
 ```
-./cleos set account permission evmevmevmevm active --add-code
+cleos set account permission evmevmevmevm active --add-code
 ```
 
-after the init action we need a small amount of token (1 A) to be transferred into the contract account (with memo=contract account), for example:
+after the init action we need a small amount of token (1 EOS) to be transferred into the contract account (with memo=contract account), for example:
 ```
-./cleos transfer eosio evmevmevmevm "1.0000 A" "evmevmevmevm"
+cleos transfer eosio evmevmevmevm "1.0000 EOS" "evmevmevmevm"
 ```
 Now EVM initialization is completed. 
 
@@ -417,13 +417,13 @@ Now EVM initialization is completed.
 
 to bridge in token (Native->EVM), use native Antelope transfer with memo equals to ETH address, for example:
 ```
-./cleos transfer eosio evmevmevmevm "1000000.0000 A" "0x2787b98fc4e731d0456b3941f0b3fe2e01439961"
+cleos transfer eosio evmevmevmevm "1000000.0000 EOS" "0x2787b98fc4e731d0456b3941f0b3fe2e01439961"
 ```
 
 To verify all EVM account balances directly on the Antelope node run the following command and replace your contract name "evmevmevmevm" if needed:
 
 ```shell
-./cleos get table evmevmevmevm evmevmevmevm account
+cleos get table evmevmevmevm evmevmevmevm account
 ```
 
 Example output:
@@ -450,11 +450,11 @@ Notice that the value `000000000000000000000000000000010000000000000000000000000
 
 Vaulta-EVM version 2 will be compatible to EVM Shanghai version, which supports EIP-1559 & PUSH0 opcode:
 ```
-./cleos push action evmevmevmevm setversion '[2]' -p evmevmevmevm
+cleos push action evmevmevmevm setversion '[2]' -p evmevmevmevm
 ```
 wait for some seconds, and do another EVM transfer to kick off vaulta evm version upgrade:
 ```
-./cleos transfer eosio evmevmevmevm "1.0000 A" "0x2787b98fc4e731d0456b3941f0b3fe2e01439961"
+cleos transfer eosio evmevmevmevm "1.0000 EOS" "0x2787b98fc4e731d0456b3941f0b3fe2e01439961"
 ```
 
 
@@ -465,12 +465,12 @@ We need the evm-miner (transaction wrapper) to wrap EVM contracts to Antelope tr
 Use `a123` for example (public key EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP, private key 5JURSKS1BrJ1TagNBw1uVSzTQL2m9eHGkjknWeZkjSt33Awtior). Note, you may need to unlock your Antelope wallet again if it was already timed out.
 
 ```shell
-./cleos create account eosio a123 EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio a123 EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
 ```
 
 run the open action on evm contract to open the account balance row:
 ```
-./cleos push action evmevmevmevm open '{"owner":"a123"}' -p a123
+cleos push action evmevmevmevm open '{"owner":"a123"}' -p a123
 ```
 
 Follow the instructions in https://github.com/VaultaFoundation/evm-miner to setup the evm-miner service.
@@ -622,7 +622,7 @@ f86680843b9aca00830f4240942787b98fc4e731d0456b3941f0b3fe2e0143996101808279aaa00c
 #### Check The ETH Balance Again
 
 ```shell
-./cleos get table evmevmevmevm evmevmevmevm account
+cleos get table evmevmevmevm evmevmevmevm account
 ```
 
 Example output:
@@ -750,7 +750,7 @@ f901c401843b9aca00830f42408080b90170608060405234801561001057600080fd5b5061015080
 Check the account from Antelope blockchain to verify if your solidity bytecode has been deployed:
 
 ```shell
-./cleos get table evmevmevmevm evmevmevmevm account
+cleos get table evmevmevmevm evmevmevmevm account
 {
   "rows": [{
       "id": 0,
@@ -830,7 +830,7 @@ f88a02843b9aca00830f42409451a97d86ae7c83f050056f03ebbe45100104676480a46057361d00
 Verify on Antelope blockchain to ensure nonce & balance were updated:
 
 ```shell
-./cleos get table evmevmevmevm evmevmevmevm account
+cleos get table evmevmevmevm evmevmevmevm account
 {
   "rows": [{
       "id": 0,
@@ -872,7 +872,7 @@ Since we don't support running View actions directly from Antelope node (read re
 In the above example, contract address is 51a97d86ae7c83f050056f03ebbe451001046764), we use
 
 ```shell
-./cleos get table evmevmevmevm evmevmevmevm account --index 2 -L 51a97d86ae7c83f050056f03ebbe451001046764 --key-type sha256
+cleos get table evmevmevmevm evmevmevmevm account --index 2 -L 51a97d86ae7c83f050056f03ebbe451001046764 --key-type sha256
 ```
 
 to get the response:
@@ -890,7 +890,7 @@ to get the response:
 From the response, contract address 51a97d86ae7c83f050056f03ebbe451001046764 will use table id 2. So we get the storage table data of evmevmevmevm (with scope = 2, table name = `storage`)
 
 ```shell
-./cleos get table evmevmevmevm 2 storage
+cleos get table evmevmevmevm 2 storage
 ```
 
 Example output:
@@ -934,13 +934,13 @@ Antelope block 8 & 9 -> EVM virtual block 4
 
 check the current config table:
 ```
-./cleos get table evmevmevmevm evmevmevmevm config
+cleos get table evmevmevmevm evmevmevmevm config
 {
   "rows": [{
       "version": 0,
       "chainid": 15555,
       "genesis_time": "2022-11-18T07:58:34",
-      "ingress_bridge_fee": "0.0100 A",
+      "ingress_bridge_fee": "0.0100 EOS",
       "gas_price": "150000000000",
       "miner_cut": 10000,
       "status": 0
@@ -1038,7 +1038,7 @@ Run the below commamnd to start the evm-node:
 
 ```shell
 mkdir ./chain-data
-./evm-node --chain-data ./chain-data --plugin block_conversion_plugin --plugin blockchain_plugin --nocolor 1 --verbosity=5 --genesis-json=./genesis.json
+evm-node --chain-data ./chain-data --plugin block_conversion_plugin --plugin blockchain_plugin --nocolor 1 --verbosity=5 --genesis-json=./genesis.json
 ```
 
 ### 6. Start evm-rpc
@@ -1050,7 +1050,7 @@ The evm-rpc process provides Ethereum compatible RPC service for clients. It que
 Run below commmand to start the evm-node:
 
 ```shell
-./evm-rpc --api-spec=eth,net --http-port=0.0.0.0:8881 --evm-node=127.0.0.1:8080 --chaindata=./chain-data
+evm-rpc --api-spec=eth,net --http-port=0.0.0.0:8881 --evm-node=127.0.0.1:8080 --chaindata=./chain-data
 ```
 
 The `--chain-data` parameter value must point to the same directory of the chain-data in evm-node.
