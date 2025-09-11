@@ -26,7 +26,7 @@ Have the following binaries built from https://github.com/AntelopeIO/cdt:
 - cdt-cpp: the Antelope smart contract compiler
 - eosio-wast2wasm & eosio-wasm2wast: conversion tools for building EVM contract
 
-List of compiled system contracts from https://github.com/eosnetworkfoundation/eos-system-contracts (compiled by cdt):
+List of compiled system contracts from https://github.com/VaultaFoundation/system-contracts (compiled by cdt):
 
 - eosio.boot.wasm
 - eosio.bios.wasm
@@ -34,28 +34,28 @@ List of compiled system contracts from https://github.com/eosnetworkfoundation/e
 - eosio.token.wasm (optional, if you want to test token economy)
 - eosio.system.wasm (optional, if you want to test resources: RAM, NET, CPU)
 
-Follow the instruction in https://github.com/eosnetworkfoundation/eos-evm-contract to compile the EOS-EVM contracts, you should get the following files: 
+Follow the instruction in https://github.com/VaultaFoundation/evm-contract to compile the Vaulta-EVM contracts, you should get the following files: 
 
 - evm_runtime.wasm
 - evm_runtime.abi
 
-(Alternatively, but not recommended, you can download these contract from EOS mainnet account "eosio.evm")
+(Alternatively, but not recommended, you can download these contract from Vaulta mainnet account "eosio.evm")
 
-Follow the instruction in https://github.com/eosnetworkfoundation/eos-evm-node to compile the eos-evm-node, you should get the following binaries
+Follow the instruction in https://github.com/VaultaFoundation/evm-node to compile the evm-node, you should get the following binaries
 
-- eos-evm-node: silkworm node process that receive data from the main Antelope chain and convert to the EVM chain
-- eos-evm-rpc: silkworm rpc server that provide service for view actions and other read operations
+- evm-node: silkworm node process that receive data from the main Antelope chain and convert to the EVM chain
+- evm-rpc: silkworm rpc server that provide service for view actions and other read operations
 
-## Run A Local Node With EOS EVM Service
+## Run A Local Node With Vaulta EVM Service
 
-In order to run an EOS EVM service, and thus have setup the Antelope blockchain with capabilities to push EVM transactions, we need to have the follow items inside one physical server / VM.
+In order to run an Vaulta EVM service, and thus have setup the Antelope blockchain with capabilities to push EVM transactions, we need to have the follow items inside one physical server / VM.
 
 1. [Run A Local Antelope Node](#1-run-a-local-antelope-node)
 2. [Blockchain Bootstrap And Initialization](#2-blockchain-bootstrap-and-initialization)
 3. [Deploy And Initialize EVM Contract](#3-deploy-and-initialize-evm-contract)
-4. [Setup The eos-evm-miner Service](#4-setup-the-eos-evm-miner-service)
-5. [Start eos-evm-node](#5-start-eos-evm-node-aka-silkworm-node)
-6. [Start eos-evm-rpc](#6-start-eos-evm-rpc-aka-silkworm-rpc)
+4. [Setup The evm-miner Service](#4-setup-the-evm-miner-service)
+5. [Start evm-node](#5-start-evm-node-aka-silkworm-node)
+6. [Start evm-rpc](#6-start-evm-rpc-aka-silkworm-rpc)
 7. [Setup The Flask Proxy](#7-setup-the-flask-proxy)
 
 ### 1. Run A Local Antelope Node
@@ -124,7 +124,7 @@ p2p-max-nodes-per-host = 10
 # p2p-peer-address = 
 
 # The name supplied to identify this node amongst the peers.
-agent-name = "EOS Test Agent"
+agent-name = "Vaulta Test Agent"
 
 # Can be 'any' or 'producers' or 'specified' or 'none'. If 'specified', peer-key must be specified at least once. If only 'producers', peer-key is not required. 'producers' and 'specified' may be combined.
 allowed-connection = any
@@ -153,12 +153,8 @@ enable-stale-production = true
 # ID of producer controlled by this node (e.g. inita; may specify multiple times)
 producer-name = eosio
 
-# Tuple of [public key, WIF private key] for block production (may specify multiple times)
-private-key = ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
-private-key = ["EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP","5JURSKS1BrJ1TagNBw1uVSzTQL2m9eHGkjknWeZkjSt33Awtior"]
-private-key = ["EOS7mGPTufZzCw1GxobnS9qkbdBkV7ajd1Apz9SmxXmPnKyxw2g6u","5KXMcXZjwC69uTHyYKF5vtFP8NLyq8ZaNrbjVc5HoMKBsH3My4D"]
-private-key = ["EOS7RaMheR2Fw4VYBj9dj6Vv7jMyV54NrdmgTe7GRkosEPxCTtTPR","5Jo1cABt1KLCTmYmePetiU8A5uDKVZGM44PgvQ4SiJVo2gA9Son"]
-private-key = ["EOS5sUpxhaC5V231cAVxGVH9RXtN9n4KDxZG6ZUwHRgYoEpTBUidU","5JK68f7PifEtGhN2T4xK9mMxCrtYLmPp6cNdKSSYJmTJqCFhNVX"]
+signature-provider = EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=KEY:5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
+signature-provider = EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP=KEY:5JURSKS1BrJ1TagNBw1uVSzTQL2m9eHGkjknWeZkjSt33Awtior
 
 # state-history
 trace-history = true
@@ -182,7 +178,7 @@ plugin = eosio::net_api_plugin
 Start the Antelope node with the below command:
 
 ```shell
-./build/programs/nodeos/nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console
+nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console
 ```
 
 You will see the node is started and blocks are produced, for example:
@@ -195,21 +191,21 @@ info  2022-10-14T04:03:20.401 nodeos    producer_plugin.cpp:2437      produce_bl
 If you want to start and discard all previous blockchain data, add `--delete-all-blocks`:
 
 ```shell
-./build/programs/nodeos/nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console --delete-all-blocks
+nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console --delete-all-blocks
 ```
 
 If you want to start with the previous blockchain data, but encounter the "dirty flag" error, try to restart with `--hard-replay`, in this case the state will be discarded, the node will validate and apply every block from the beginning.
 
 ```shell
-./build/programs/nodeos/nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console --hard-replay
+nodeos --data-dir=./data-dir  --config-dir=./data-dir --genesis-json=./data-dir/genesis.json --disable-replay-opts --contracts-console --hard-replay
 ```
 
 ### 2. Blockchain Bootstrap And Initialization
 
-You will use `cleos` command line tool from here onward, you can find the command line interface [here](https://docs.eosnetwork.com/spring/3.2-rc1/cleos/command-reference/) or you can run `./build/programs/cleos/cleos` so try the following command now:
+You will use `cleos` command line tool from here onward, you can find the command line interface [here](https://docs.eosnetwork.com/spring/3.2-rc1/cleos/command-reference/) or you can run `cleos` so try the following command now:
 
 ```shell
-./cleos get info
+cleos get info
 ```
 
 If you can get the similar response as below:
@@ -246,14 +242,14 @@ It means your local node is running fine and cleos tool has successfully communi
 Generate some public/private key pairs for testing, command:
 
 ```shell
-./cleos create key --to-console
+cleos create key --to-console
 ```
 
 You will get similar output as follow:
 
 ```txt
-Private key: 5Ki7JeCMXQmxreZnL2JubQEYuqByehbPhKGUXyxqo6RYGNS2F3i
-Public key: EOS8j4zHDrqRrf84QJLDTEgUbhB24VUkqVCjAxMzmeJuJSvZ8S1FU
+Private key: 5JH8ghMRxAgYYRH6euTJJ3wuoAh8aXgFJydNdwSn2zLr37iV16y
+Public key: PUB_K1_68MmMRb2Q12jafTC38zSrPz5UBQfvDH3dR9dTxvJVkwoENNekJ
 ```
 
 Repeat the same command to generate multiple key pairs. Save your key pairs for later testing use.
@@ -261,7 +257,7 @@ Repeat the same command to generate multiple key pairs. Save your key pairs for 
 Create your new wallet named w123 (any other name is fine):
 
 ```shell
-./build/programs/cleos/cleos wallet create -n w123 --file w123.key
+cleos wallet create -n w123 --file w123.key
 ```
 
 Your wallet password is saved into w123.key
@@ -269,7 +265,7 @@ Your wallet password is saved into w123.key
 Import one or more private keys into wallet w123:
 
 ```shell
-./cleos wallet import -n w123 --private-key YOUR_PRIVATE_KEY
+cleos wallet import -n w123 --private-key YOUR_PRIVATE_KEY
 ```
 
 Once you have done everything with the wallet, it is fine to bootstrap the blockchain.
@@ -293,13 +289,12 @@ You'll get the "OK" response if succeed:
 Run below command to deploy the boot contract:
 
 ```shell
-./cleos set code eosio ../eos-system-contracts/build/contracts/eosio.boot/eosio.boot.wasm
+cleos set code eosio ../system-contracts/build/contracts/eosio.boot/eosio.boot.wasm
 ```
 
 Output:
 
 ```txt
-Reading WASM from /home/kayan-u20/workspaces/spring/../eos-system-contracts/build/contracts/eosio.boot/eosio.boot.wasm...
 Setting Code...
 executed transaction: acaf5ed70a7ce271627532cf76b6303ebab8d24656f57c69b03cfe8103f6f457  2120 bytes  531 us
 #         eosio <= eosio::setcode               {"account":"eosio","vmtype":0,"vmversion":0,"code":"0061736d0100000001480e60000060027f7f0060017e0060...
@@ -309,7 +304,7 @@ warning: transaction executed locally, but may not be confirmed by the network y
 Run below commmand to set boot.abi:
 
 ```shell
-./cleos set abi eosio ../eos-system-contracts/build/contracts/eosio.boot/eosio.boot.abi
+cleos set abi eosio ../system-contracts/build/contracts/eosio.boot/eosio.boot.abi
 ```
 
 Output:
@@ -324,64 +319,64 @@ warning: transaction executed locally, but may not be confirmed by the network y
 Activate the other protocol features:
 
 ```shell
-./cleos push action eosio activate '["f0af56d2c5a48d60a4a5b5c903edfb7db3a736a94ed589d0b797df33ff9d3e1d"]' -p eosio 
-./cleos push action eosio activate '["e0fb64b1085cc5538970158d05a009c24e276fb94e1a0bf6a528b48fbc4ff526"]' -p eosio
-./cleos push action eosio activate '["d528b9f6e9693f45ed277af93474fd473ce7d831dae2180cca35d907bd10cb40"]' -p eosio
-./cleos push action eosio activate '["c3a6138c5061cf291310887c0b5c71fcaffeab90d5deb50d3b9e687cead45071"]' -p eosio 
-./cleos push action eosio activate '["bcd2a26394b36614fd4894241d3c451ab0f6fd110958c3423073621a70826e99"]' -p eosio
-./cleos push action eosio activate '["ad9e3d8f650687709fd68f4b90b41f7d825a365b02c23a636cef88ac2ac00c43"]' -p eosio
-./cleos push action eosio activate '["8ba52fe7a3956c5cd3a656a3174b931d3bb2abb45578befc59f283ecd816a405"]' -p eosio 
-./cleos push action eosio activate '["6bcb40a24e49c26d0a60513b6aeb8551d264e4717f306b81a37a5afb3b47cedc"]' -p eosio
-./cleos push action eosio activate '["68dcaa34c0517d19666e6b33add67351d8c5f69e999ca1e37931bc410a297428"]' -p eosio
-./cleos push action eosio activate '["5443fcf88330c586bc0e5f3dee10e7f63c76c00249c87fe4fbf7f38c082006b4"]' -p eosio
-./cleos push action eosio activate '["4fca8bd82bbd181e714e283f83e1b45d95ca5af40fb89ad3977b653c448f78c2"]' -p eosio
-./cleos push action eosio activate '["ef43112c6543b88db2283a2e077278c315ae2c84719a8b25f25cc88565fbea99"]' -p eosio
-./cleos push action eosio activate '["4a90c00d55454dc5b059055ca213579c6ea856967712a56017487886a4d4cc0f"]' -p eosio 
-./cleos push action eosio activate '["35c2186cc36f7bb4aeaf4487b36e57039ccf45a9136aa856a5d569ecca55ef2b"]' -p eosio
-./cleos push action eosio activate '["299dcb6af692324b899b39f16d5a530a33062804e41f09dc97e9f156b4476707"]' -p eosio
-./cleos push action eosio activate '["2652f5f96006294109b3dd0bbde63693f55324af452b799ee137a81a905eed25"]' -p eosio
-./cleos push action eosio activate '["1a99a59d87e06e09ec5b028a9cbb7749b4a5ad8819004365d02dc4379a8b7241"]' -p eosio
+cleos push action eosio activate '["f0af56d2c5a48d60a4a5b5c903edfb7db3a736a94ed589d0b797df33ff9d3e1d"]' -p eosio 
+cleos push action eosio activate '["e0fb64b1085cc5538970158d05a009c24e276fb94e1a0bf6a528b48fbc4ff526"]' -p eosio
+cleos push action eosio activate '["d528b9f6e9693f45ed277af93474fd473ce7d831dae2180cca35d907bd10cb40"]' -p eosio
+cleos push action eosio activate '["c3a6138c5061cf291310887c0b5c71fcaffeab90d5deb50d3b9e687cead45071"]' -p eosio 
+cleos push action eosio activate '["bcd2a26394b36614fd4894241d3c451ab0f6fd110958c3423073621a70826e99"]' -p eosio
+cleos push action eosio activate '["ad9e3d8f650687709fd68f4b90b41f7d825a365b02c23a636cef88ac2ac00c43"]' -p eosio
+cleos push action eosio activate '["8ba52fe7a3956c5cd3a656a3174b931d3bb2abb45578befc59f283ecd816a405"]' -p eosio 
+cleos push action eosio activate '["6bcb40a24e49c26d0a60513b6aeb8551d264e4717f306b81a37a5afb3b47cedc"]' -p eosio
+cleos push action eosio activate '["68dcaa34c0517d19666e6b33add67351d8c5f69e999ca1e37931bc410a297428"]' -p eosio
+cleos push action eosio activate '["5443fcf88330c586bc0e5f3dee10e7f63c76c00249c87fe4fbf7f38c082006b4"]' -p eosio
+cleos push action eosio activate '["4fca8bd82bbd181e714e283f83e1b45d95ca5af40fb89ad3977b653c448f78c2"]' -p eosio
+cleos push action eosio activate '["ef43112c6543b88db2283a2e077278c315ae2c84719a8b25f25cc88565fbea99"]' -p eosio
+cleos push action eosio activate '["4a90c00d55454dc5b059055ca213579c6ea856967712a56017487886a4d4cc0f"]' -p eosio 
+cleos push action eosio activate '["35c2186cc36f7bb4aeaf4487b36e57039ccf45a9136aa856a5d569ecca55ef2b"]' -p eosio
+cleos push action eosio activate '["299dcb6af692324b899b39f16d5a530a33062804e41f09dc97e9f156b4476707"]' -p eosio
+cleos push action eosio activate '["2652f5f96006294109b3dd0bbde63693f55324af452b799ee137a81a905eed25"]' -p eosio
+cleos push action eosio activate '["1a99a59d87e06e09ec5b028a9cbb7749b4a5ad8819004365d02dc4379a8b7241"]' -p eosio
 ```
 
 #### create system accounts:
 ```shell
-./cleos create account eosio exchange EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.msig EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.token EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.bpay EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.names EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.ram EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.ramfee EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.saving EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.stake EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.upay EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.rex EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.fees EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
-./cleos create account eosio eosio.grants EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio exchange EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.msig EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.token EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.bpay EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.names EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.ram EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.ramfee EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.saving EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.stake EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.upay EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.rex EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.fees EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio eosio.grants EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
 ```
 
 #### create other test accounts
 ```shell
-./cleos create account eosio a123 EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio a123 EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
 ```
 
 #### deploy token contract
 ```shell
 echo "=== set contract to eosio.token ==="
-./cleos set code eosio.token ./eosio.token.wasm
-./cleos set abi eosio.token ./eosio.token.abi
+cleos set code eosio.token ./eosio.token.wasm
+cleos set abi eosio.token ./eosio.token.abi
 ```
 
 #### create, issue & transfer tokens
 ```shell
-./cleos push action eosio.token create '{"issuer":"eosio", "maximum_supply":"1000000000.0000 SYS", "can_freeze":0, "can_recall":0, "can_whitelist":0}' -p eosio.token@active
-./cleos push action eosio.token create '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0}' -p eosio.token@active
+cleos push action eosio.token create '{"issuer":"eosio", "maximum_supply":"1000000000.0000 SYS", "can_freeze":0, "can_recall":0, "can_whitelist":0}' -p eosio.token@active
+cleos push action eosio.token create '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0}' -p eosio.token@active
 
-./cleos push action eosio.token issue '{"to":"eosio", "quantity":"1000000000.0000 SYS", "memo":"hi"}' -p eosio@active
-./cleos push action eosio.token issue '{"to":"eosio", "quantity":"1000000000.0000 EOS", "memo":"hi"}' -p eosio@active
+cleos push action eosio.token issue '{"to":"eosio", "quantity":"1000000000.0000 SYS", "memo":"hi"}' -p eosio@active
+cleos push action eosio.token issue '{"to":"eosio", "quantity":"1000000000.0000 EOS", "memo":"hi"}' -p eosio@active
 
-./cleos push action eosio.token transfer '{"from":"eosio", "to":"a123", "quantity":"5000000.0000 SYS", "memo":""}' -p eosio@active
-./cleos push action eosio.token transfer '{"from":"eosio", "to":"a123", "quantity":"5000000.0000 EOS", "memo":""}' -p eosio@active
+cleos push action eosio.token transfer '{"from":"eosio", "to":"a123", "quantity":"5000000.0000 SYS", "memo":""}' -p eosio@active
+cleos push action eosio.token transfer '{"from":"eosio", "to":"a123", "quantity":"5000000.0000 EOS", "memo":""}' -p eosio@active
 ```
 
 
@@ -390,45 +385,45 @@ echo "=== set contract to eosio.token ==="
 Create account evmevmevmevm with key pair EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP 5JURSKS1BrJ1TagNBw1uVSzTQL2m9eHGkjknWeZkjSt33Awtior:
 
 ```shell
-./cleos create account eosio evmevmevmevm EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio evmevmevmevm EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
 ```
 
 Deploy evm_runtime contract, wasm and abi file, to account evmevmevmevm:
 
 ```shell
-./cleos set code evmevmevmevm ./evm_runtime.wasm
-./cleos set abi evmevmevmevm ./evm_runtime.abi
+cleos set code evmevmevmevm ./evm_runtime.wasm
+cleos set abi evmevmevmevm ./evm_runtime.abi
 ```
 
-Set chain ID & native token configuration (in this example, gas price is 150 Gwei, miner_cut is 10%)
+Set chain ID & native token configuration (in this example, gas price is 150 Gwei, miner_cut is 10%, gas token is `eosio.token::EOS`)
 ```
-./cleos push action evmevmevmevm init "{\"chainid\":15555,\"fee_params\":{\"gas_price\":150000000000,\"miner_cut\":10000,\"ingress_bridge_fee\":\"0.0100 EOS
+cleos push action evmevmevmevm init "{\"chainid\":15555,\"fee_params\":{\"gas_price\":150000000000,\"miner_cut\":10000,\"ingress_bridge_fee\":\"0.0100 EOS
 \"},\"token_contract\":\"eosio.token\"}" -p evmevmevmevm
 ```
 
 Add eosio.code to active permission
 ```
-./cleos set account permission evmevmevmevm active --add-code
+cleos set account permission evmevmevmevm active --add-code
 ```
 
 after the init action we need a small amount of token (1 EOS) to be transferred into the contract account (with memo=contract account), for example:
 ```
-./cleos transfer eosio evmevmevmevm "1.0000 EOS" "evmevmevmevm"
+cleos transfer eosio evmevmevmevm "1.0000 EOS" "evmevmevmevm"
 ```
 Now EVM initialization is completed. 
 
 
-#### Bridging tokens (EOS->EVM) and Verify EVM account balances 
+#### Bridging tokens (Native->EVM) and Verify EVM account balances 
 
-to bridge in token (EOS->EVM), use native Antelope transfer with memo equals to ETH address, for example:
+to bridge in token (Native->EVM), use native Antelope transfer with memo equals to ETH address, for example:
 ```
-./cleos transfer eosio evmevmevmevm "1000000.0000 EOS" "0x2787b98fc4e731d0456b3941f0b3fe2e01439961"
+cleos transfer eosio evmevmevmevm "1000000.0000 EOS" "0x2787b98fc4e731d0456b3941f0b3fe2e01439961"
 ```
 
 To verify all EVM account balances directly on the Antelope node run the following command and replace your contract name "evmevmevmevm" if needed:
 
 ```shell
-./cleos get table evmevmevmevm evmevmevmevm account
+cleos get table evmevmevmevm evmevmevmevm account
 ```
 
 Example output:
@@ -451,38 +446,38 @@ Example output:
 
 Notice that the value `0000000000000000000000000000000100000000000000000000000000000000` is in hexadecimal form and must be exactly 64 characters long (256-bit integer value).
 
-#### [Optional] Update the eos evm to version 2
+#### [Optional] Update the vaulta evm to version 2
 
-EOS-EVM version 2 will be compatible to EVM Shanghai version, which supports EIP-1559 & PUSH0 opcode:
+Vaulta-EVM version 2 will be compatible to EVM Shanghai version, which supports EIP-1559 & PUSH0 opcode:
 ```
-./cleos push action evmevmevmevm setversion '[2]' -p evmevmevmevm
+cleos push action evmevmevmevm setversion '[2]' -p evmevmevmevm
 ```
-wait for some seconds, and do another EVM transfer to kick off eos evm version upgrade:
+wait for some seconds, and do another EVM transfer to kick off vaulta evm version upgrade:
 ```
-./cleos transfer eosio evmevmevmevm "1.0000 EOS" "0x2787b98fc4e731d0456b3941f0b3fe2e01439961"
+cleos transfer eosio evmevmevmevm "1.0000 EOS" "0x2787b98fc4e731d0456b3941f0b3fe2e01439961"
 ```
 
 
-### 4. Setup the eos-evm-miner service:
+### 4. Setup the evm-miner service:
 
-We need the eos-evm-miner (transaction wrapper) to wrap EVM contracts to Antelope transactions.
+We need the evm-miner (transaction wrapper) to wrap EVM contracts to Antelope transactions.
 
 Use `a123` for example (public key EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP, private key 5JURSKS1BrJ1TagNBw1uVSzTQL2m9eHGkjknWeZkjSt33Awtior). Note, you may need to unlock your Antelope wallet again if it was already timed out.
 
 ```shell
-./cleos create account eosio a123 EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
+cleos create account eosio a123 EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP EOS8kE63z4NcZatvVWY4jxYdtLg6UEA123raMGwS6QDKwpQ69eGcP
 ```
 
 run the open action on evm contract to open the account balance row:
 ```
-./cleos push action evmevmevmevm open '{"owner":"a123"}' -p a123
+cleos push action evmevmevmevm open '{"owner":"a123"}' -p a123
 ```
 
-Follow the instructions in https://github.com/eosnetworkfoundation/eos-evm-miner to setup the eos-evm-miner service.
+Follow the instructions in https://github.com/VaultaFoundation/evm-miner to setup the evm-miner service.
 
 ```
-git clone https://github.com/eosnetworkfoundation/eos-evm-miner.git
-cd eos-evm-miner
+git clone https://github.com/VaultaFoundation/evm-miner.git
+cd evm-miner
 ```
 
 #### Prepare The .env File
@@ -502,14 +497,14 @@ EXPIRE_SEC=60
 
 In the above environment settings, Tx Wrapper will listen to 127.0.0.1:18888, use `5JURSKS1BrJ1TagNBw1uVSzTQL2m9eHGkjknWeZkjSt33Awtior` to wrap and sign the in-coming ETH trasnactions into Antelope transactions (contract=evmevmevmevm, action_name=pushtx, with expire second set to 60 and using permission a123@active), and then push them into the Antelope RPC endpoint http://127.0.0.1:8888. If the endpoint http://127.0.0.1:8888 is unavailable, it will try the next endpoint http://192.168.1.100:8888.
 
-#### Start eos-evm-miner
+#### Start evm-miner
 
 ```shell
 yarn
 yarn start
 ```
 
-#### verify eos-evm-miner
+#### verify evm-miner
 
 ```shell
 curl http://127.0.0.1:18888 -X POST -H "Accept: application/json" -H "Content-Type: application/json" --data '{"method":"eth_gasPrice","params":[],"id":1,"jsonrpc":"2.0"}'
@@ -584,7 +579,7 @@ Enter private key for 2787b98fc4e731d0456b3941f0b3fe2e01439961:
 Eth signed raw transaction is f86680843b9aca00830f4240942787b98fc4e731d0456b3941f0b3fe2e0143996101808279aaa00c028e3a5086d2ed6c4fdd8e1612691d6dd715386d35c4764726ad0f9f281fb3a0652f0fbdf0f13b3492ff0e30468efc98bef8774ea15374b64a0a13da24ba8879
 ```
 
-#### Push an ETH raw transaction via eos-evm-miner
+#### Push an ETH raw transaction via evm-miner
 
 For example:
 
@@ -627,7 +622,7 @@ f86680843b9aca00830f4240942787b98fc4e731d0456b3941f0b3fe2e0143996101808279aaa00c
 #### Check The ETH Balance Again
 
 ```shell
-./cleos get table evmevmevmevm evmevmevmevm account
+cleos get table evmevmevmevm evmevmevmevm account
 ```
 
 Example output:
@@ -755,7 +750,7 @@ f901c401843b9aca00830f42408080b90170608060405234801561001057600080fd5b5061015080
 Check the account from Antelope blockchain to verify if your solidity bytecode has been deployed:
 
 ```shell
-./cleos get table evmevmevmevm evmevmevmevm account
+cleos get table evmevmevmevm evmevmevmevm account
 {
   "rows": [{
       "id": 0,
@@ -806,7 +801,7 @@ Once you get the raw trasnaction, then we can push into Tx Wrapper to sign as th
 curl http://127.0.0.1:18888 -X POST -H "Accept: application/json" -H "Content-Type: application/json" --data '{"method":"eth_sendRawTransaction","params":["0xf88a02843b9aca00830f42409451a97d86ae7c83f050056f03ebbe45100104676480a46057361d000000000000000000000000000000000000000000000000000000000000007b8279a9a0a2fc71e4beebd9cd1a3d9a55da213f126641f7ed0bb708a3882fa2b85dd6c30ea0164a5d8a8b9b37950091665194f07b5c4e8f6d1b0d6ef162b0e0a1f9bf10c7a7"],"id":1,"jsonrpc":"2.0"}'
 ```
 
-You'll get a response in eos-evm-miner:
+You'll get a response in evm-miner:
 
 ```txt
 {"method":"eth_sendRawTransaction","params":["0xf88a02843b9aca00830f42409451a97d86ae7c83f050056f03ebbe45100104676480a46057361d000000000000000000000000000000000000000000000000000000000000007b8279a9a0a2fc71e4beebd9cd1a3d9a55da213f126641f7ed0bb708a3882fa2b85dd6c30ea0164a5d8a8b9b37950091665194f07b5c4e8f6d1b0d6ef162b0e0a1f9bf10c7a7"],"id":1,"jsonrpc":"2.0"}
@@ -835,7 +830,7 @@ f88a02843b9aca00830f42409451a97d86ae7c83f050056f03ebbe45100104676480a46057361d00
 Verify on Antelope blockchain to ensure nonce & balance were updated:
 
 ```shell
-./cleos get table evmevmevmevm evmevmevmevm account
+cleos get table evmevmevmevm evmevmevmevm account
 {
   "rows": [{
       "id": 0,
@@ -870,14 +865,14 @@ Verify on Antelope blockchain to ensure nonce & balance were updated:
 
 #### [Debug only] Investigate The Current EVM Storage State On Antelope
 
-Since we don't support running View actions directly from Antelope node (read requests will go to eos-evm-rpc), it is quite complicated to investigate the storage of EVM directly from Antelope. However, If you really want to do that. These are the steps:
+Since we don't support running View actions directly from Antelope node (read requests will go to evm-rpc), it is quite complicated to investigate the storage of EVM directly from Antelope. However, If you really want to do that. These are the steps:
 
 ##### Identify The "id" Field Of The Contract Address
 
 In the above example, contract address is 51a97d86ae7c83f050056f03ebbe451001046764), we use
 
 ```shell
-./cleos get table evmevmevmevm evmevmevmevm account --index 2 -L 51a97d86ae7c83f050056f03ebbe451001046764 --key-type sha256
+cleos get table evmevmevmevm evmevmevmevm account --index 2 -L 51a97d86ae7c83f050056f03ebbe451001046764 --key-type sha256
 ```
 
 to get the response:
@@ -895,7 +890,7 @@ to get the response:
 From the response, contract address 51a97d86ae7c83f050056f03ebbe451001046764 will use table id 2. So we get the storage table data of evmevmevmevm (with scope = 2, table name = `storage`)
 
 ```shell
-./cleos get table evmevmevmevm 2 storage
+cleos get table evmevmevmevm 2 storage
 ```
 
 Example output:
@@ -913,9 +908,9 @@ Example output:
 }
 ```
 
-### 5. Start eos-evm-node 
+### 5. Start evm-node 
 
-A eos-evm-node is a node process of the virtual ethereum blockchain that validates virtual ethereum blocks and serves the read requests coming from eos-evm-rpc. It will not produce blocks. However, it will consume blocks from Antelope node and convert Antelope blocks into Virutal Ethereum blocks in a deterministic way.
+A evm-node is a node process of the virtual ethereum blockchain that validates virtual ethereum blocks and serves the read requests coming from evm-rpc. It will not produce blocks. However, it will consume blocks from Antelope node and convert Antelope blocks into Virutal Ethereum blocks in a deterministic way.
 
 To set it up, we need to first make up a genesis of the virtual ethereum blockchain that maps to the same EVM state of the evm account of the Antelope chain that just initialized in the previous steps.
 
@@ -939,7 +934,7 @@ Antelope block 8 & 9 -> EVM virtual block 4
 
 check the current config table:
 ```
-./cleos get table evmevmevmevm evmevmevmevm config
+cleos get table evmevmevmevm evmevmevmevm config
 {
   "rows": [{
       "version": 0,
@@ -995,17 +990,14 @@ This determines the value of the "timestamp" field in EVM genesis.
 
 Set the "mixHash" field to be "0x + Antelope starting block id", e.g.  "0x000000026d392f1bfeddb000555bcb03ca6e31a54c0cf9edc23cede42bda17e6"
 
-Set the "nonce" field to be the hex encoding of the value of the Antelope name of the account on which the EVM contract is deployed. So if the `evmevmevmevm` account name is used, then set the nonce to "0x56e4adc95b92b720". If the `eosio.evm` account name is used, then set the nonce to "0x5530ea015b900000".
+Set the "nonce" field to be the hex value of the Antelope name of the account on which the EVM contract is deployed. So if the `evmevmevmevm` account name is used, then set the nonce to "0x56e4adc95b92b720". If the `eosio.evm` account name is used, then set the nonce to "0x5530ea015b900000".
 
-The function `convert_name_to_value` from https://github.com/eosnetworkfoundation/eos-evm/blob/main/tests/spring/antelope_name.py can be used to get the appropriate nonce value using Python:
+Here is the way how an Antelope name is encoded: An Antelope name an 64-bit integer (with the lowest 4 bit set to zero) displayed using base-32 big endian order (using character set `.12345abcdefghijklmnopqrstuvwxyz`). For example:
 
-```shell
->>> from antelope_name import convert_name_to_value
->>> print(f'0x{convert_name_to_value("evmevmevmevm"):x}')
-0x56e4adc95b92b720
->>> print(f'0x{convert_name_to_value("eosio.evm"):x}')
-0x5530ea015b900000
-```
+	Integer 0x56e4adc95b92b720 is encoded as `evmevmevmevm` as displayed Antelope name
+	Integer 0x5530ea015b900000 is encoded as `eosio.evm` as displayed Antelope name
+	Integer 0x0800000000000000 is encoded as `1` as displayed Antelope name
+	Integer 0x0842108421084210 is encoded as `111111111111` as displayed Antelope name
 
 In the "alloc" part, setup the genesis EVM account balance (should be all zeros)
 
@@ -1040,29 +1032,29 @@ Final EVM genesis example:
 
 ```
 
-#### Start The EOS EVM Process
+#### Start The Vaulta EVM Process
 
-Run the below commamnd to start the eos-evm-node:
+Run the below commamnd to start the evm-node:
 
 ```shell
 mkdir ./chain-data
-./eos-evm-node --chain-data ./chain-data --plugin block_conversion_plugin --plugin blockchain_plugin --nocolor 1 --verbosity=5 --genesis-json=./genesis.json
+evm-node --chain-data ./chain-data --plugin block_conversion_plugin --plugin blockchain_plugin --nocolor 1 --verbosity=5 --genesis-json=./genesis.json
 ```
 
-### 6. Start eos-evm-rpc
+### 6. Start evm-rpc
 
-The eos-evm-rpc process provides Ethereum compatible RPC service for clients. It queries state (including blocks, accounts, storage) from eos-evm-node, and it can also run view actions requested by clients.
+The evm-rpc process provides Ethereum compatible RPC service for clients. It queries state (including blocks, accounts, storage) from evm-node, and it can also run view actions requested by clients.
 
-#### Start The eos-evm-rpc process
+#### Start The evm-rpc process
 
-Run below commmand to start the eos-evm-node:
+Run below commmand to start the evm-node:
 
 ```shell
-./eos-evm-rpc --api-spec=eth,net --http-port=0.0.0.0:8881 --eos-evm-node=127.0.0.1:8080 --chaindata=./chain-data
+evm-rpc --api-spec=eth,net --http-port=0.0.0.0:8881 --evm-node=127.0.0.1:8080 --chaindata=./chain-data
 ```
 
-The `--chain-data` parameter value must point to the same directory of the chain-data in eos-evm-node.
-In the above command, eos-evm-rpc will listen on port 8881 for RPC requests.
+The `--chain-data` parameter value must point to the same directory of the chain-data in evm-node.
+In the above command, evm-rpc will listen on port 8881 for RPC requests.
 
 #### Verify The RPC Response
 
@@ -1123,14 +1115,14 @@ Response:
 
 #### Setup Proxy To Separate Read Requests From Write Requests
 
-The proxy program will separate Ethereum's write requests (such as eth_sendRawTransaction,eth_gasPrice) from other requests (treated as read requests). The write requests should go to Transaction Wrapper (which wrap the ETH transaction into Antelope transaction and sign it and push to the Antelope blockchain). The read requests should go to eos-evm-rpc.
+The proxy program will separate Ethereum's write requests (such as eth_sendRawTransaction,eth_gasPrice) from other requests (treated as read requests). The write requests should go to Transaction Wrapper (which wrap the ETH transaction into Antelope transaction and sign it and push to the Antelope blockchain). The read requests should go to evm-rpc.
 
 In order to get it working, docker is required. To install docker in Linux, see https://docs.docker.com/engine/install/ubuntu/
 
-You can find the proxy tool here: https://github.com/eosnetworkfoundation/eos-evm-node/tree/main/peripherals/proxy
+You can find the proxy tool here: https://github.com/VaultaFoundation/evm-node/tree/main/peripherals/proxy
 
 ```shell
-cd eos-evm-node/peripherals/proxy/
+cd evm-node/peripherals/proxy/
 ```
 
 - Edit the file `nginx.conf`, find the follow settings:
@@ -1146,7 +1138,7 @@ cd eos-evm-node/peripherals/proxy/
 ```
 
 - Change the IP and port of the write session to your Transaction Wrapper server endpoint.
-- Change the IP and port of the read session to your eos-evm-rpc server endpoint
+- Change the IP and port of the read session to your evm-rpc server endpoint
 - Build the docker image for the proxy program:
 
 ```shell
@@ -1189,7 +1181,7 @@ Example response:
 
 #### [Optional] Setup Metamask Chrome extension
 
-- Ensure eos-evm-rpc is running with `--api-spec=eth,debug,net,trace`
+- Ensure evm-rpc is running with `--api-spec=eth,debug,net,trace`
 - Install Metamask Plugin in Chrome
 - Click Account ICON on the top right, the Find Settings -> Networks -> Add Network
 
@@ -1208,11 +1200,11 @@ After setting up Metamask, you should able to import or create accounts via this
 
 #### [Optional] Setup EVM block explorer
 
-In this example, we will use the blockscout explorer (https://github.com/eosnetworkfoundation/blockscout). Any other Ethereum compatible block explorer will also works.
+In this example, we will use the blockscout explorer (https://github.com/VaultaFoundation/blockscout). Any other Ethereum compatible block explorer will also works.
 
 Requirements:
 
-- eos-evm-rpc is running with `--api-spec=eth,debug,net,trace` parameter. This is the source the block explore will retrieve data from.
+- evm-rpc is running with `--api-spec=eth,debug,net,trace` parameter. This is the source the block explore will retrieve data from.
 - docker in Linux
 - Python3
 
@@ -1220,9 +1212,9 @@ Requirements:
 
 Setup the Flask proxy to convert the bulk requests into single requests.
 
-Since eos-evm-rpc does not support bulk requests, we need a simple proxy script to convert those requests into multiple single requests:
+Since evm-rpc does not support bulk requests, we need a simple proxy script to convert those requests into multiple single requests:
 
-This is an example proxy script "flask_proxy.py" that convert requests and forward them to the eos-evm-rpc endpoint (for example http://127.0.0.1:8881):
+This is an example proxy script "flask_proxy.py" that convert requests and forward them to the evm-rpc endpoint (for example http://127.0.0.1:8881):
 
 ```python
 #!/usr/bin/env python3
@@ -1278,7 +1270,7 @@ python3 ./flask_proxy.py
 Checkout and run blockscout in the same machine that the flask proxy is running
 
 ```shell
-git clone https://github.com/eosnetworkfoundation/blockscout
+git clone https://github.com/VaultaFoundation/blockscout
 cd blockscout
 git checkout evm
 cd docker
